@@ -7,12 +7,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// 1. DATABASE CONNECTION 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connected to MongoDB Atlas"))
     .catch(err => console.log("Database Error:", err));
 
-// 2. SCHEMAS & MODELS
 const employeeSchema = new mongoose.Schema({
     employeeId: { type: String, unique: true, required: true },
     fullName: String,
@@ -29,9 +27,7 @@ const attendanceSchema = new mongoose.Schema({
 });
 const Attendance = mongoose.model('Attendance', attendanceSchema);
 
-// 3. API ROUTES
 
-// --- Employee Routes ---
 app.get('/api/employees', async (req, res) => {
     const emps = await Employee.find();
     res.json(emps);
@@ -52,7 +48,6 @@ app.delete('/api/employees/:id', async (req, res) => {
     res.json({ message: "Deleted" });
 });
 
-// --- Attendance Routes ---
 app.get('/api/attendance', async (req, res) => {
     const records = await Attendance.find().sort({ date: -1 });
     res.json(records);
